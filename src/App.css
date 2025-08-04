@@ -1,38 +1,39 @@
+@font-face {
+  font-family: 'Assistant';
+  src: url('./assets/fonts/Assistant-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900; /* Variable font supports weights from 100 to 900 */
+  font-style: normal;
+  font-display: swap; /* Improves loading performance */
+}
+
+body {
+  margin: 0;
+  font-family: 'Assistant', sans-serif !important;
+  background-color: #FFFFFF; /* Light pink background */
+  color: #121212; /* Dark text */
+}
+
+* {
+  font-family: inherit !important;
+}
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+  background-color: #FFFFFF; /* White content background */
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+h1, h2, h3, h4, h5, h6 {
+  color: #B43361; /* Primary pink for headers */
+    font-family: 'Assistant', sans-serif;
+
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button {
+  background-color: #B43361 !important; /* Primary pink for buttons */
+  color: #FFFFFF !important; /* White text for buttons */
+}
+
+button:hover {
+  background-color: #8B2A4C !important; /* Darker pink on hover */
 }
