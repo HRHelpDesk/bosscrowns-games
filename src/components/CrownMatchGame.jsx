@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Card, CardActionArea, Typography, Alert, Modal, Button, Snackbar } from '@mui/material';
-import { wigsData } from '../../data/wigsData';
+import { wigsData } from '../data/wigsData';
 
 const shuffleArray = (array) => {
   return array.slice().sort(() => Math.random() - 0.5).slice(0, 8); // Limit to 8 pairs for simplicity

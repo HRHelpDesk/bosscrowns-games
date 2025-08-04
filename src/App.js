@@ -1,14 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, HashRouter } from 'react-router-dom';
 import { UserDataProvider } from './context/UserDataContext';
-import CrownMatchGame from './components/match-game';
+import CrownMatchGame from './components/CrownMatchGame';
 import WigJeopardy from './components/WigJeopardy';
 import './App.css';
 
 function App() {
   return (
     <UserDataProvider>
-      <Router>
+      <HashRouter>
         <div className="App">
           <Routes>
             <Route path="/jeopardy" element={<WigJeopardy />} />
@@ -16,7 +16,7 @@ function App() {
             <Route path="/" element={<CrownMatchGame />} /> {/* Default route */}
           </Routes>
         </div>
-      </Router>
+      </HashRouter>
     </UserDataProvider>
   );
 }
