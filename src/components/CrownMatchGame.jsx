@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Card, CardActionArea, Typography, Alert, Modal, Button, Snackbar } from '@mui/material';
-import { wigsData } from '../data/wigsData';
+import axios from 'axios';
 
 const shuffleArray = (array) => {
   return array.slice().sort(() => Math.random() - 0.5).slice(0, 8); // Limit to 8 pairs for simplicity
@@ -20,12 +20,39 @@ const CrownMatchGame = () => {
   const [tries, setTries] = useState(0);
   const [timer, setTimer] = useState(null);
   const [couponCode, setCouponCode] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const termsRef = useRef(null);
   const imagesRef = useRef(null);
 
-  const initializeGame = () => {
-    const shuffled = shuffleArray(wigsData);
+  const API_BASE_URL = 'https://bosscrowns-api-a228488a1e46.herokuapp.com/bosscrowns/jeopardy';
+  const GAME_TYPE = 'match-game';
+
+  // Fetch active match game
+  useEffect(() => {
+    const fetchActiveGame = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axios.get(`${API_BASE_URL}/active?type=${GAME_TYPE}`);
+        const activeGame = response.data;
+        if (!activeGame) {
+          throw new Error('No active Match game found');
+        }
+        setCouponCode(activeGame.couponCode || 'CROWN20');
+        initializeGame(activeGame.data.cards);
+      } catch (err) {
+        setError(`Failed to load Match game: ${err.response?.data?.message || err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchActiveGame();
+  }, []);
+
+  const initializeGame = (cards) => {
+    const shuffled = shuffleArray(cards);
     setRemainingCards(shuffled);
     setShuffledTitles(shuffleArray(shuffled));
     setShuffledImages(shuffleArray(shuffled));
@@ -34,17 +61,25 @@ const CrownMatchGame = () => {
     setFeedback(null);
     setTries(0);
     setTimeElapsed(0);
-    setCouponCode(null);
   };
 
   const startGame = () => {
     setGameStarted(true);
     setStartModalOpen(false);
-    initializeGame();
     const interval = setInterval(() => {
       setTimeElapsed((prev) => prev + 1);
     }, 1000);
     setTimer(interval);
+  };
+
+  const restartGame = () => {
+    setEndModalOpen(false);
+    setGameStarted(true);
+    const interval = setInterval(() => {
+      setTimeElapsed((prev) => prev + 1);
+    }, 1000);
+    setTimer(interval);
+    initializeGame(remainingCards); // Reinitialize with same cards
   };
 
   useEffect(() => {
@@ -52,7 +87,6 @@ const CrownMatchGame = () => {
       clearInterval(timer);
       setEndModalOpen(true);
       setGameStarted(false);
-      setCouponCode('CROWN20'); // Placeholder coupon code
     }
   }, [remainingCards, gameStarted, timer]);
 
@@ -94,13 +128,8 @@ const CrownMatchGame = () => {
     }
   };
 
-  const restartGame = () => {
-    setEndModalOpen(false);
-    startGame();
-  };
-
   const handleSnackbarClose = () => {
-    setFeedback(null); // Close the snackbar
+    setFeedback(null);
   };
 
   const cardStyle = {
@@ -108,8 +137,8 @@ const CrownMatchGame = () => {
     height: 250,
     borderRadius: 8,
     boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
-    background: '#FFFFFF', // White background
-    border: `2px solid #B43361`, // Primary pink border
+    background: '#FFFFFF',
+    border: `2px solid #B43361`,
     overflow: 'hidden',
     position: 'relative',
     transition: 'transform 0.2s ease, box-shadow 0.2s ease',
@@ -121,13 +150,13 @@ const CrownMatchGame = () => {
 
   const imageCardStyle = {
     ...cardStyle,
-    background: 'linear-gradient(135deg, #B43361, #8B2A4C)', // Pink to darker pink gradient for image cards
+    background: 'linear-gradient(135deg, #B43361, #8B2A4C)',
   };
 
   const selectedCardStyle = {
     ...cardStyle,
-    border: `2px solid #121212`, // Dark border for selected
-    background: '#FFFFFF', // White background for selected
+    border: `2px solid #121212`,
+    background: '#FFFFFF',
   };
 
   const selectedImageStyle = (isSuccess) => ({
@@ -146,7 +175,7 @@ const CrownMatchGame = () => {
     textAlign: 'center',
     position: 'relative',
     zIndex: 2,
-    color: '#FFFFFF', // White text
+    color: '#FFFFFF',
   };
 
   const modalStyle = {
@@ -162,10 +191,28 @@ const CrownMatchGame = () => {
     borderRadius: 8,
   };
 
+  if (loading) {
+    return (
+      <Box sx={{ p: 2, bgcolor: '#FFFFFF', minHeight: '100vh', textAlign: 'center' }}>
+        <Typography variant="h6" sx={{ color: '#121212' }}>
+          Loading...
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 2, bgcolor: '#FFFFFF', minHeight: '100vh', textAlign: 'center' }}>
+        <Typography variant="h6" sx={{ color: '#d32f2f' }}>
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ p: 2, bgcolor: '#FFFFFF', minHeight: '100vh' }}>
-
-
       <Modal open={startModalOpen} onClose={() => {}}>
         <Box sx={modalStyle}>
           <Typography variant="h6" gutterBottom sx={{ color: '#B43361' }}>
@@ -204,7 +251,7 @@ const CrownMatchGame = () => {
                       sx={{
                         wordBreak: 'break-word',
                         fontSize: '1.1rem',
-                        color: '#FFFFFF', // Ensure white text
+                        color: '#FFFFFF',
                       }}
                     >
                       {card.title}
@@ -246,7 +293,7 @@ const CrownMatchGame = () => {
         autoHideDuration={2000}
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        sx={{ zIndex: 1500 }} // Ensure it appears above cards
+        sx={{ zIndex: 1500 }}
       >
         <Alert severity={feedback?.type} sx={{ width: '100%' }}>
           {feedback?.message}
@@ -287,7 +334,7 @@ const CrownMatchGame = () => {
             padding: '12px',
             width: '180px',
             textAlign: 'center',
-            zIndex: 1400, // Below snackbar
+            zIndex: 1400,
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#B43361', mb: 1 }}>
