@@ -1,15 +1,19 @@
 {
   "files": {
-    "main.css": "/bosscrowns-games/static/css/main.5f0bbb04.css",
-    "main.js": "/bosscrowns-games/static/js/main.3e960bc0.js",
+    "main.css": "/bosscrowns-games/static/css/main.a3a62d08.css",
+    "main.js": "/bosscrowns-games/static/js/main.933ccf66.js",
     "static/media/bc-logo-light.png": "/bosscrowns-games/static/media/bc-logo-light.8e7b637cf1d8501a6073.png",
     "static/media/Assistant-VariableFont_wght.ttf": "/bosscrowns-games/static/media/Assistant-VariableFont_wght.cd018375bf1dc81357a0.ttf",
+    "static/media/slick.svg": "/bosscrowns-games/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/bosscrowns-games/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/bosscrowns-games/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/bosscrowns-games/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/bosscrowns-games/index.html",
-    "main.5f0bbb04.css.map": "/bosscrowns-games/static/css/main.5f0bbb04.css.map",
-    "main.3e960bc0.js.map": "/bosscrowns-games/static/js/main.3e960bc0.js.map"
+    "main.a3a62d08.css.map": "/bosscrowns-games/static/css/main.a3a62d08.css.map",
+    "main.933ccf66.js.map": "/bosscrowns-games/static/js/main.933ccf66.js.map"
   },
   "entrypoints": [
-    "static/css/main.5f0bbb04.css",
-    "static/js/main.3e960bc0.js"
+    "static/css/main.a3a62d08.css",
+    "static/js/main.933ccf66.js"
   ]
 }
